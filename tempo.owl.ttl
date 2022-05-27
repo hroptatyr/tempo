@@ -1,0 +1,205 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix tempo: <http://purl.org/tempo/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://purl.org/tempo>
+	a	owl:Ontology ;
+	dc:creator	"Sebastian Freundt"^^xsd:string ;
+	dc:description	"""In a typical (uni)temporal data model every resource's appearance (and disappearance) is being tracked.
+Numerous systems accomplish unitemporal tracking, either externally by e.g. using git to record the insertion or deletion of a resource, or internally by e.g. using prov:generatedAtTime and prov:invalidatedAtTime.
+This axis of time is known as *system time*, and none of TempO's concern because for one there is readily available support, and moreover because unitemporal tracking is used for principally true statements, i.e. those that have always been (considered) true or will always be (considered) true.
+
+TempO addresses bitemporal and tritemporal setups: Resources which are (known or believed to be) valid and efficacious for some time.
+A second time axis orthogonal to system time is introduced, that is a resource can be valid even though it is currently not in the system, or can be invalid when it enters the system and become valid later on.
+Efficacy, sometimes called decision time, is yet another concept orthogonal to validity, i.e. a resource that is no longer or not yet valid can be efficacious.
+The converse, a valid but inefficacious resource in the system, is *usually* not encountered but TempO does not impose restrictions on the shape of the time area.
+
+Example:
+--------
+The ISO 4217 currency code for the German mark, before Germany introduced the Euro, used to be DEM.  Germany introdcued the mark in 1948, ISO 4217 introduced the code in February 1978, a currency ontology was published on 2018-02-29, the mark was discontinued on 1999-01-01.
+The statements could be encoded as:
+
+    ccy:DEM
+        a ccy:CurrencyCode ;
+        rdfs:label \"DEM\" ;
+        prov:generatedAtTime \"2018-02-29T04:00:00Z\"^^xsd:dateTime .
+        tempo:validFrom \"1978-02\"^^xsd:gYearMonth ;
+        tempo:validTill \"1999-01-01\"^^xsd:date ;
+        tempo:efficaciousFrom \"1948\"^^xsd:gYear .
+
+to denote that a point-in-time (as-of) query today with a decision time of 1998 should return ccy:DEM,
+and a point-in-time query as-of today for what was valid in 1950 should return ccy:DEM as invalid,
+whereas a query as-of today deciding what 'DEM' resolved to in 1945 would not yield any result,
+nor would a point-in-time query as-of 2013-12-11 for valid codes in 1990 (because it wasn't in the system back then)."""@en ;
+	dct:creator	<https://orcid.org/0000-0002-7352-2825> ;
+	dct:format	"text/turtle"^^xsd:string ;
+	dct:issued	"2022-05-26T05:00:00Z"^^xsd:dateTime ;
+	dct:language	"en"^^xsd:language ;
+	dct:lastModified	"2022-05-26T05:00:00Z"^^xsd:dateTime ;
+	dct:license	<https://creativecommons.org/licenses/by-sa/4.0/> ;
+	dct:title	"TempO - Temporal Ontology"@en ;
+	owl:versionIRI	<http://purl.org/tempo/0.1> ;
+	owl:versionInfo	"0.1"^^xsd:string ;
+	rdfs:comment	"""TempO is a lightweight ontology for describing temporal validity and efficacy according to a tritemporal data model.
+
+For pragmatic reasons, keeping track of system time (also known as transaction time) is left to other ontologies or external systems such as git, or transactional extensions of the database."""@en .
+
+tempo:TemporalConstraint
+	a	owl:Class ;
+	rdfs:comment	"""Temporal constraint box to capture a consistent set of validity and efficacy intervals."""@en ;
+	rdfs:label	"Temporal Constraint"@en .
+
+tempo:constrainedBy
+	a	owl:ObjectProperty ;
+	rdfs:comment	"""A temporal constraint associated with this resource."""@en ;
+	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
+	rdfs:label	"has constraint"@en ;
+	rdfs:range	tempo:TemporalConstraint .
+
+tempo:efficaciousFrom
+	a	owl:AnnotationProperty ;
+	rdfs:comment	"""The date or time when this resource becomes efficacious.
+
+If omitted the resource is said to be efficacious in the past from a tempo:efficaciousTill's point of view.
+If neither is present the resource is said to be forever efficacious.
+
+A resource might not exist yet or have ceased to exist during its efficacy,
+Use tempo:validFrom/tempo:validTill to track validity.
+
+ and the use of possibly future information."""@en ;
+	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
+	rdfs:label	"efficacious from"@en ;
+	rdfs:seeAlso	tempo:efficaciousTill .
+
+tempo:efficaciousTill
+	a	owl:AnnotationProperty ;
+	rdf:comment	"""The date or time when this resource becomes inefficacious.
+
+If omitted the resource is said to be efficacious in the future from a tempo:efficaciousFrom's point of view.
+If neither is present the resource is said to be forever efficacious.
+
+A resource might not exist yet or have ceased to exist during its efficacy,
+Use tempo:validFrom/tempo:validTill to track validity.
+
+ and possibly the use of future information."""@en ;
+	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
+	rdfs:label	"efficacious till"@en ;
+	rdfs:seeAlso	tempo:efficaciousFrom .
+
+tempo:validFrom
+	a	owl:AnnotationProperty ;
+	rdfs:comment	"""The date or time when this resource becomes valid.
+
+If omitted the resource is said to be valid in the past from a tempo:validTill's point of view.
+If neither is present the resource is said to be forever valid.
+
+A resource can be formally invalid and yet efficacious, like the future name of an unborn baby can be used to refer to the baby during pregnancy knowing that a birth certificate with this name will exist one day.
+Use tempo:efficaciousFrom/tempo:efficaciousTill to track efficacy.
+
+There are no restrictions on the multiplicity of tempo:validFrom.
+A resource can be valid during a number of non-overlapping time periods (intervals) which implies that multiple tempo:validFrom's can be ordered chronologically and paired with a chronological ordering of tempo:validTill's such that there is an alternating sequence of elements from the validFrom set and the validTill set with respect to chronologicity.
+
+Example
+-------
+The resource
+
+    []
+        tempo:validFrom \"1998-01-01\"^^xsd:date , \"2004-01-01\"^^xsd:date ;
+        tempo:validTill \"2001-01-01\"^^xsd:date , \"2008-01-01\"^^xsd:date .
+
+is valid during the union of the intervals [1998-01-01, 2001-01-01) and [2004-01-01, 2008-01-01).  Note: the textual order cannot be preserved so this resource
+
+    []
+        tempo:validFrom \"1998-01-01\"^^xsd:date ;
+        tempo:validTill \"2008-01-01\"^^xsd:date ;
+        tempo:validFrom \"2004-01-01\"^^xsd:date ;
+        tempo:validTill \"2001-01-01\"^^xsd:date .
+
+conveys the same validity statement as above.
+
+Example
+-------
+Omission of the time value for the most distant point in the past and/or the most distant point in the future mandates this resource
+
+    []
+        tempo:validFrom \"2004-01-01\" ;
+        tempo:validTill \"2001-01-01\" .
+
+to be interpreted as valid in [-infinity, 2001-01-01) u [2004-01-01, infinity), i.e. invalid during [2001-01-01, 2004-01-01).
+
+Illegal example
+---------------
+The following resource
+
+    []
+        tempo:validFrom \"1998-01-01\"^^xsd:date , \"2000-01-01\"^^xsd:date , \"2004-01-01\"^^xsd:date ;
+        tempo:validTill \"2001-01-01\"^^xsd:date , \"2008-01-01\"^^xsd:date .
+
+does not convey proper validity information because 1998-01-01 would have to be paired with 2001-01-01 chronologically whilst alternatingly choosing from the 'from' and 'till' sets but [2000-01-01, 2008-01-01), interval next in line, overlaps with the first interval, i.e. there is a point in time that is invalid according to the first interval, to wit 2001-01-01, but at the same time valid according to the second interval.
+
+The use of incomplete date or time types is generally up to further clarification.  As far as temporal logic and constraints in TempO are concerned, a value of, say, \"1999-02\"^^xsd:gYearMonth is interpreted as \"at some point in February 1999\".  All of these points are considered equivalent as long as all values in tempo:validFrom (and paired up corresponding values in tempo:validTill) use the same scale.
+
+Using different date or time types is generally discouraged in situations where the coarser scale's value contains points before and after the finer scale's value.  That is the following is permissible
+
+    []
+        tempo:validFrom \"2019\"^^xsd:gYear ;
+        tempo:validTill \"2022-02\"^^xsd:gYearMonth .
+
+whereas
+
+    []
+        tempo:validFrom \"2019\"^^xsd:gYear ;
+        tempo:validTill \"2019-02\"^^xsd:gYearMonth .
+
+is discouraged.
+"""@en ;
+	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
+	rdfs:label	"valid from"@en ;
+	rdfs:seeAlso	tempo:validTill .
+
+tempo:validTill
+	a	owl:AnnotationProperty ;
+	rdfs:comment	"""The date or time when this resource becomes invalid.
+
+If omitted the resource is said to be valid in the future from a tempo:validFrom's point of view.
+If neither is present the resource is said to be forever valid.
+
+A resource can be formally invalid and yet efficacious, like an expired passport can be used still to identify a person.
+Use tempo:efficaciousFrom/tempo:efficaciousTill to track efficacy.
+
+There are no restrictions on the multiplicity of tempo:validTill.
+A resource can be valid during a number of non-overlapping time periods (intervals) which implies that multiple tempo:validTill's can be ordered chronologically and paired with a chronological ordering of tempo:validFrom's such that there is an alternating sequence of elements from the validTill set and the validFrom set with respect to chronologicity.  See tempo:validFrom for an example.
+
+A point in time in tempo:validTill is always exclusive.
+Combined with the policy about omissible far-in-the-future and far-in-the-past time points this implies that the resource
+
+    []
+        tempo:validFrom \"2009-09-09\"^^xsd:date ;
+        tempo:validTill \"2009-09-09\"^^xsd:date .
+
+is to be interpreted as valid in [-infinity, 2009-09-09) and valid again in [2009-09-09, infinity), or in other words forever-valid.  There is no way to encode that a resource is valid only at exactly one point in time or during an infinitesimally small period of time.
+
+The use of incomplete date or time types is generally up to further clarification.  As far as temporal logic and constraints in TempO are concerned, a value of, say, \"1999-02\"^^xsd:gYearMonth is interpreted as \"at some point in February 1999\".  All of these points are considered equivalent as long as all values in tempo:validTill (and paired up corresponding values in tempo:validFrom) use the same scale.
+
+Using different date or time types is generally discouraged in situations where the coarser scale's value contains points before and after the finer scale's value.  That is the following is permissible
+
+    []
+        tempo:validFrom \"2019\"^^xsd:gYear ;
+        tempo:validTill \"2022-02\"^^xsd:gYearMonth .
+
+whereas
+
+    []
+        tempo:validFrom \"2019\"^^xsd:gYear ;
+        tempo:validTill \"2019-02\"^^xsd:gYearMonth .
+
+is discouraged.
+"""@en ;
+	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
+	rdfs:label	"valid till"@en ;
+	rdfs:seeAlso	tempo:validFrom .
