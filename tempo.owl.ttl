@@ -133,10 +133,24 @@ With today's knowledge it is safe to assume that no other country would have bee
         tempo:validFrom \"1974\"^^xsd:gYear ;
         tempo:efficaciousFrom \"1949-05-23\"^^xsd:date .
 
-With this resource, a software or person may safely liken the ccTLD '.de' to the country Germany as long as the temporal context is not older than 1949-05-23, while at the same time being aware that uses of the country code before 1974 are anachronistic."""@en ;
+With this resource, a consumer of the dataset may safely liken the ccTLD '.de' to the country Germany as long as the temporal context is not older than 1949-05-23, while at the same time being aware that uses of the country code before 1974 are anachronistic.
+
+The notes about incomplete date or time types and mixing different date or time types in intervals made up from tempo:efficaciousFrom/tempo:efficaciousTill values as outlined in tempo:validFrom apply to efficacy annotations too.
+However, seeing as efficacy and validity are orthogonal concepts it is permissible to use incomplete date or time types on the efficacy axis different from the ones used on the validity axis.
+
+Example
+-------
+It is up further clarification whether in this resource:
+
+    ex:XY
+        rdfs:label \"XY\" ;
+        tempo:validFrom \"2004-08-02\"^^xsd:date ;
+        tempo:efficaciousFrom \"2004-08\"^^xsd:gYearMonth .
+
+the use of ex:XY's label on 2004-08-01 is anachronistic (use before its validated life-span) or illegal (use before efficacy)."""@en ;
 	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
 	rdfs:label	"efficacious from"@en ;
-	rdfs:seeAlso	tempo:efficaciousTill .
+	rdfs:seeAlso	tempo:efficaciousTill , tempo:validFrom .
 
 tempo:efficaciousTill
 	a	owl:AnnotationProperty ;
@@ -161,10 +175,12 @@ In 2003 then-Yugoslavia changed its name to Serbia and Montenegro, the ISO 3166 
         tempo:validTill \"1993\"^^xsd:gYear ;
         tempo:efficaciousTill \"2003\"^^xsd:gYear .
 
-With this resource, a software or person may safely attribute any occurrence of the label 'CS' before 2003 to Czechoslovakia."""@en ;
+With this resource, a consumer of the dataset may safely attribute any occurrence of the label 'CS' before 2003 to Czechoslovakia.
+
+A point in time in tempo:efficaciousTill is always exclusive.  See tempo:validTill for further explanation and implications."""@en ;
 	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
 	rdfs:label	"efficacious till"@en ;
-	rdfs:seeAlso	tempo:efficaciousFrom .
+	rdfs:seeAlso	tempo:efficaciousFrom , tempo:validTill .
 
 tempo:validFrom
 	a	owl:AnnotationProperty ;
@@ -202,8 +218,8 @@ Example
 Omission of the time value for the most distant point in the past and/or the most distant point in the future mandates this resource
 
     []
-        tempo:validFrom \"2004-01-01\" ;
-        tempo:validTill \"2001-01-01\" .
+        tempo:validFrom \"2004-01-01\"^^xsd:date ;
+        tempo:validTill \"2001-01-01\"^^xsd:date .
 
 to be interpreted as valid in [-infinity, 2001-01-01) u [2004-01-01, infinity), i.e. invalid during [2001-01-01, 2004-01-01).
 
