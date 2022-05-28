@@ -5,10 +5,14 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix tempo: <http://purl.org/tempo/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://purl.org/tempo>
 	a	owl:Ontology ;
+	dc:abstract	"""TempO is a lightweight ontology for describing temporal validity and efficacy according to a tritemporal data model.
+
+For pragmatic reasons, keeping track of system time (also known as transaction time) is left to other ontologies or external systems such as git, or transactional extensions of the database."""@en ;
 	dc:creator	"Sebastian Freundt"^^xsd:string ;
 	dc:description	"""In a typical (uni)temporal data model every resource's appearance (and disappearance) is being tracked.
 Numerous systems accomplish unitemporal tracking, either externally by e.g. using git to record the insertion or deletion of a resource, or internally by e.g. using prov:generatedAtTime and prov:invalidatedAtTime.
@@ -67,10 +71,9 @@ The goal of TempO is to allow for temporal constraints with control over how muc
 	dct:title	"TempO - Temporal Ontology"@en ;
 	owl:versionIRI	<http://purl.org/tempo/0.1> ;
 	owl:versionInfo	"0.1"^^xsd:string ;
-	rdfs:comment	"""TempO is a lightweight ontology for describing temporal validity and efficacy according to a tritemporal data model.
-
-For pragmatic reasons, keeping track of system time (also known as transaction time) is left to other ontologies or external systems such as git, or transactional extensions of the database."""@en ;
-	rdfs:seeAlso	<https://github.com/hroptatyr/tempo> .
+	rdfs:seeAlso	<https://github.com/hroptatyr/tempo> ;
+	vann:preferredNamespacePrefix	"tempo"^^xsd:string ;
+	vann:preferredNamespaceUri	"http://purl.org/tempo/" .
 
 tempo:TemporalConstraint
 	a	owl:Class ;
@@ -89,7 +92,7 @@ Example
             a tempo:TemporalConstraint ;
             tempo:validFrom \"1999-01-01\"^^xsd:date ;
             ccy:usedIn cc:DE ;
-	] , [
+        ] , [
             a tempo:TemporalConstraint ;
             tempo:validFrom \"2001-01-01\"^^xsd:date ;
             ccy:usedIn cc:GR ;
