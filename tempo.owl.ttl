@@ -137,7 +137,7 @@ With this resource, a software or person may safely liken the ccTLD '.de' to the
 
 tempo:efficaciousTill
 	a	owl:AnnotationProperty ;
-	rdf:comment	"""The date or time when this resource becomes inefficacious.
+	rdfs:comment	"""The date or time when this resource becomes inefficacious.
 
 If omitted the resource is said to be efficacious in the future from a tempo:efficaciousFrom's point of view.
 If neither is present the resource is said to be forever efficacious.
