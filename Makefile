@@ -1,15 +1,14 @@
-all: tempo.rdf
+all: .canonical tempo.rdf
 
-.PHONY: tempo.owl.ttl
-tempo.owl.ttl:
-	rapper -i turtle $@ >/dev/null
-	ttl2ttl --sortable $@ \
+.canonical: tempo.owl.ttl
+	rapper -i turtle $< >/dev/null
+	ttl2ttl --sortable $< \
 	| tr '@' '\001' \
 	| sort \
 	| tr '\001' '@' \
 	| ttl2ttl \
-	> $@.t && mv $@.t $@
+	> $<.t && mv $<.t $< && touch $@
 
-tempo.rdf: tempo.owl.ttl
+tempo.rdf: .canonical
 	rapper -i turtle -o rdfxml $< \
 	> $@.t && mv $@.t $@
