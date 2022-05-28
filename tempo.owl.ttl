@@ -15,27 +15,49 @@ Numerous systems accomplish unitemporal tracking, either externally by e.g. usin
 This axis of time is known as *system time*, and none of TempO's concern because for one there is readily available support, and moreover because unitemporal tracking is used for principally true statements, i.e. those that have always been (considered) true or will always be (considered) true.
 
 TempO addresses bitemporal and tritemporal setups: Resources which are (known or believed to be) valid and efficacious for some time.
-A second time axis orthogonal to system time is introduced, that is a resource can be valid even though it is currently not in the system, or can be invalid when it enters the system and become valid later on.
+A second time axis orthogonal to system time is introduced, that is a resource can be valid even though it is currently not in the system, or, conversely, can be already or still invalid by the time it enters the system.
+
 Efficacy, sometimes called decision time, is yet another concept orthogonal to validity, i.e. a resource that is no longer or not yet valid can be efficacious.
 The converse, a valid but inefficacious resource in the system, is *usually* not encountered but TempO does not impose restrictions on the shape of the time area.
 
+In general the necessity for tracking both validity and efficacy arises in areas where concepts are assigned a code or label that is subject to reuse following invalidation.
+Tracking efficacy and validity concurrently then allows for fine-grained control over how much future knowledge or how much past knowledge we tolerate in a datset.
+
 Example:
 --------
-The ISO 4217 currency code for the German mark, before Germany introduced the Euro, used to be DEM.  Germany introdcued the mark in 1948, ISO 4217 introduced the code in February 1978, a currency ontology was published on 2018-02-29, the mark was discontinued on 1999-01-01.
-The statements could be encoded as:
+Czechoslovakia was founded in 1918 but became part of Germany, Hungary and Poland in 1938.
+It was reestablished in 1945 but split into two sovereign states in 1993.
+The ISO 3166 country code for Czechoslovakia used to be 'CS', assigned in 1974, published in February 1978, and invalidated with the country's split.
+In 2003 ISO 3166 reassigned the country code 'CS' to Serbia and Montenegro.
+The facts were assembled in 2018 and written down as follows:
 
-    ccy:DEM
-        a ccy:CurrencyCode ;
-        rdfs:label \"DEM\" ;
+    cc:CSHH
+        a cc:ISO3166-CountryCode ;
+        rdfs:label \"CS\" ;
+        cc:refersTo \"Czechoslovakia\" ;
         prov:generatedAtTime \"2018-02-29T04:00:00Z\"^^xsd:dateTime .
         tempo:validFrom \"1978-02\"^^xsd:gYearMonth ;
-        tempo:validTill \"1999-01-01\"^^xsd:date ;
-        tempo:efficaciousFrom \"1948\"^^xsd:gYear .
+        tempo:validTill \"1993-01-01\"^^xsd:date ;
+        tempo:efficaciousFrom \"1918\"^^xsd:gYear , \"1945\"^^xsd:gYear ;
+        tempo:efficaciousTill \"1938\"^^xsd:gYear , \"2003\"^^xsd:gYear .
 
-to denote that a point-in-time (as-of) query today with a decision time of 1998 should return ccy:DEM,
-and a point-in-time query as-of today for what was valid in 1950 should return ccy:DEM as invalid,
-whereas a query as-of today deciding what 'DEM' resolved to in 1945 would not yield any result,
-nor would a point-in-time query as-of 2013-12-11 for valid codes in 1990 (because it wasn't in the system back then)."""@en ;
+The use of the country code 'CS' in a statement from 1988 can be resolved to cc:CSHH, as of today, free from ambiguity; it was valid back then after all and we know that today.
+The same query in 2017 (point-in-time query) would have yielded no results because the information hadn't been in the system back then.
+Point-in-time queries, however, are not TempO's major concern so only as-of-today queries are assumed from now on.
+
+Following the country's split it is highly likely that news reports from, say, 1994 highlighting the then-recent past would still have used 'CS' to refer to cc:CSHH.
+According to the resource this is possible, a query for 'CS' in 1994 would bring up cc:CSHH as it is efficacious but marked as invalidated.
+
+On the other end of history, the use of the code 'CS' in, say, 1976 is plausible.  The code was decided on but not yet formally published.
+A query for 'CS' as used in 1976 would bring up cc:CSHH, marked as anachronistic.
+Going back further, a statement from, say 1942, using the code 'CS' must clearly refer to something else.
+A query for 'CS' as used in 1976 would yield not yield any results.
+
+--
+
+The ontology IRI http://purl.org/tempo/ always resolve to the latest version of TempO.  Particular versionIRIs such as http://purl.org/tempo/0.1 can be used by clients to force the import of a particular version.
+
+The goal of TempO is to allow for temporal constraints with control over how much future or past is permissible directly on the published resource, and as such, TempO does not restrict domain/ranges."""@en ;
 	dct:creator	<https://orcid.org/0000-0002-7352-2825> ;
 	dct:format	"text/turtle"^^xsd:string ;
 	dct:issued	"2022-05-26T05:00:00Z"^^xsd:dateTime ;
@@ -47,19 +69,43 @@ nor would a point-in-time query as-of 2013-12-11 for valid codes in 1990 (becaus
 	owl:versionInfo	"0.1"^^xsd:string ;
 	rdfs:comment	"""TempO is a lightweight ontology for describing temporal validity and efficacy according to a tritemporal data model.
 
-For pragmatic reasons, keeping track of system time (also known as transaction time) is left to other ontologies or external systems such as git, or transactional extensions of the database."""@en .
+For pragmatic reasons, keeping track of system time (also known as transaction time) is left to other ontologies or external systems such as git, or transactional extensions of the database."""@en ;
+	rdfs:seeAlso	<https://github.com/hroptatyr/tempo> .
 
 tempo:TemporalConstraint
 	a	owl:Class ;
-	rdfs:comment	"""Temporal constraint box to capture a consistent set of validity and efficacy intervals."""@en ;
-	rdfs:label	"Temporal Constraint"@en .
+	rdfs:comment	"""Temporal constraint box to capture a consistent set of validity and efficacy intervals.
+
+Objects of this class also serve the purpose to capture additional constraints or annotations, in particular when they are also temporally constrained.
+
+Example
+-------
+
+    ccy:EUR
+        a ccy:ISO4217-CurrencyCode ;
+        ccy:usedIn cc:DE , cc:GR ;
+        rdfs:label \"EUR\" ;
+        tempo:constrainedBy [
+            a tempo:TemporalConstraint ;
+            tempo:validFrom \"1999-01-01\"^^xsd:date ;
+            ccy:usedIn cc:DE ;
+	] , [
+            a tempo:TemporalConstraint ;
+            tempo:validFrom \"2001-01-01\"^^xsd:date ;
+            ccy:usedIn cc:GR ;
+        ] .
+
+meaning the currency code 'EUR' became valid in Germany in 1999 whereas in Greece it became valid in 2001."""@en ;
+	rdfs:label	"Temporal Constraint"@en ;
+	rdfs:seeAlso	tempo:constrainedBy .
 
 tempo:constrainedBy
 	a	owl:ObjectProperty ;
 	rdfs:comment	"""A temporal constraint associated with this resource."""@en ;
 	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
-	rdfs:label	"has constraint"@en ;
-	rdfs:range	tempo:TemporalConstraint .
+	rdfs:label	"constrained by"@en ;
+	rdfs:range	tempo:TemporalConstraint ;
+	rdfs:seeAlso	tempo:TemporalConstraint .
 
 tempo:efficaciousFrom
 	a	owl:AnnotationProperty ;
@@ -71,7 +117,20 @@ If neither is present the resource is said to be forever efficacious.
 A resource might not exist yet or have ceased to exist during its efficacy,
 Use tempo:validFrom/tempo:validTill to track validity.
 
- and the use of possibly future information."""@en ;
+Example
+-------
+The Federal Republic of Germany was formed on 1949-05-23.
+In 1974 ISO 3166 assigns the country code 'DE' to Germany.
+With today's knowledge it is safe to assume that no other country would have been assigned the country code 'DE' so we use information from the future to roll out the efficacy of the code into the past:
+
+    cc:DE
+        a cc:ISO3166-CountryCode ;
+        rdfs:label \"DE\" ;
+        cc:refersTo \"Germany\" ;
+        tempo:validFrom \"1974\"^^xsd:gYear ;
+        tempo:efficaciousFrom \"1949-05-23\"^^xsd:date .
+
+With this resource, a software or person may safely liken the ccTLD '.de' to the country Germany as long as the temporal context is not older than 1949-05-23, while at the same time being aware that uses of the country code before 1974 are anachronistic."""@en ;
 	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
 	rdfs:label	"efficacious from"@en ;
 	rdfs:seeAlso	tempo:efficaciousTill .
@@ -86,7 +145,20 @@ If neither is present the resource is said to be forever efficacious.
 A resource might not exist yet or have ceased to exist during its efficacy,
 Use tempo:validFrom/tempo:validTill to track validity.
 
- and possibly the use of future information."""@en ;
+Example
+-------
+The country code for Czechoslovkia had been 'CS' until 1993 when Czechoslovakia divided into Czechia and Slovakia.
+In 2003 then-Yugoslavia changed its name to Serbia and Montenegro, the ISO 3166 assignment is 'CS'.
+
+    cc:CSHH
+        a cc:ISO3166-CountryCode ;
+        rdfs:label \"CS\" ;
+        cc:refersTo \"Czechoslovakia\" ;
+        tempo:validFrom \"1974\"^^xsd:gYear ;
+        tempo:validTill \"1993\"^^xsd:gYear ;
+        tempo:efficaciousTill \"2003\"^^xsd:gYear .
+
+With this resource, a software or person may safely attribute any occurrence of the label 'CS' before 2003 to Czechoslovakia."""@en ;
 	rdfs:isDefinedBy	<http://purl.org/tempo/> ;
 	rdfs:label	"efficacious till"@en ;
 	rdfs:seeAlso	tempo:efficaciousFrom .
