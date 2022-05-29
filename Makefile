@@ -12,7 +12,7 @@ all: .canonical tempo.rdf index.html
 	> $<.t && mv $<.t $< && touch $@
 
 tempo.rdf: tempo.owl.ttl .canonical
-	rapper -i turtle -o rdfxml $< \
+	rapper -i turtle -o rdfxml-abbrev $< \
 	| mawk 'NR==2{print "<?xml-stylesheet type=\"text/xsl\" href=\"owl2html.xslt.xml\"?>"}1' \
 	> $@.t && mv $@.t $@
 
