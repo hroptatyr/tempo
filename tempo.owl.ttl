@@ -59,17 +59,17 @@ A query for 'CS' as used in 1976 would yield not yield any results.
 
 --
 
-The ontology IRI http://purl.org/tempo/ always resolve to the latest version of TempO.  Particular versionIRIs such as http://purl.org/tempo/0.1 can be used by clients to force the import of a particular version.
+The ontology IRI http://purl.org/tempo/ always resolve to the latest version of TempO.  Particular versionIRIs such as http://purl.org/tempo/0.1/ can be used by clients to force the import of a particular version.
 
 The goal of TempO is to allow for temporal constraints with control over how much future or past is permissible directly on the published resource, and as such, TempO does not restrict domain/ranges."""@en ;
 	dct:creator	<https://orcid.org/0000-0002-7352-2825> ;
 	dct:format	"text/turtle"^^xsd:string ;
 	dct:issued	"2022-05-26T05:00:00Z"^^xsd:dateTime ;
 	dct:language	"en"^^xsd:language ;
-	dct:lastModified	"2022-05-26T05:00:00Z"^^xsd:dateTime ;
 	dct:license	<https://creativecommons.org/licenses/by-sa/4.0/> ;
+	dct:modified	"2022-08-20T05:19:00Z"^^xsd:dateTime ;
 	dct:title	"TempO - Temporal Ontology"@en ;
-	owl:versionIRI	<http://purl.org/tempo/0.1> ;
+	owl:versionIRI	<http://purl.org/tempo/0.1/> ;
 	owl:versionInfo	"0.1"^^xsd:string ;
 	rdfs:seeAlso	<https://github.com/hroptatyr/tempo> ;
 	vann:preferredNamespacePrefix	"tempo"^^xsd:string ;

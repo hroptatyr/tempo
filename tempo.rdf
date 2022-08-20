@@ -59,20 +59,20 @@ A query for 'CS' as used in 1976 would yield not yield any results.
 
 --
 
-The ontology IRI http://purl.org/tempo/ always resolve to the latest version of TempO.  Particular versionIRIs such as http://purl.org/tempo/0.1 can be used by clients to force the import of a particular version.
+The ontology IRI http://purl.org/tempo/ always resolve to the latest version of TempO.  Particular versionIRIs such as http://purl.org/tempo/0.1/ can be used by clients to force the import of a particular version.
 
 The goal of TempO is to allow for temporal constraints with control over how much future or past is permissible directly on the published resource, and as such, TempO does not restrict domain/ranges.</dc:description>
     <dct:creator rdf:resource="https://orcid.org/0000-0002-7352-2825"/>
     <dct:format rdf:datatype="http://www.w3.org/2001/XMLSchema#string">text/turtle</dct:format>
     <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-26T05:00:00Z</dct:issued>
     <dct:language rdf:datatype="http://www.w3.org/2001/XMLSchema#language">en</dct:language>
-    <dct:lastModified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-26T05:00:00Z</dct:lastModified>
     <dct:license rdf:resource="https://creativecommons.org/licenses/by-sa/4.0/"/>
+    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-08-20T05:19:00Z</dct:modified>
     <dct:title xml:lang="en">TempO - Temporal Ontology</dct:title>
     <vann:preferredNamespacePrefix rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tempo</vann:preferredNamespacePrefix>
     <vann:preferredNamespaceUri>http://purl.org/tempo/</vann:preferredNamespaceUri>
     <rdfs:seeAlso rdf:resource="https://github.com/hroptatyr/tempo"/>
-    <owl:versionIRI rdf:resource="http://purl.org/tempo/0.1"/>
+    <owl:versionIRI rdf:resource="http://purl.org/tempo/0.1/"/>
     <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.1</owl:versionInfo>
   </owl:Ontology>
   <owl:Class rdf:about="http://purl.org/tempo/TemporalConstraint">
