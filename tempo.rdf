@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="owl2html.xslt.xml"?>
 <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:dcat="http://www.w3.org/ns/dcat#"
    xmlns:dct="http://purl.org/dc/terms/"
    xmlns:owl="http://www.w3.org/2002/07/owl#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -74,6 +75,8 @@ The goal of TempO is to allow for temporal constraints with control over how muc
     <rdfs:seeAlso rdf:resource="https://github.com/hroptatyr/tempo"/>
     <owl:versionIRI rdf:resource="http://purl.org/tempo/0.1/"/>
     <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.1</owl:versionInfo>
+    <dcat:downloadURL rdf:resource="http://purl.org/tempo/rdf"/>
+    <dcat:downloadURL rdf:resource="http://purl.org/tempo/ttl"/>
   </owl:Ontology>
   <owl:Class rdf:about="http://purl.org/tempo/TemporalConstraint">
     <rdfs:comment xml:lang="en">Temporal constraint box to capture a consistent set of validity and efficacy intervals.
