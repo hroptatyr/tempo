@@ -70,6 +70,7 @@ The goal of TempO is to allow for temporal constraints with control over how muc
 	dct:language	"en"^^xsd:language ;
 	dct:license	<https://creativecommons.org/licenses/by-sa/4.0/> ;
 	dct:modified	"2022-08-20T05:19:00Z"^^xsd:dateTime ;
+	dct:publisher	<https://orcid.org/0000-0002-7352-2825> ;
 	dct:title	"TempO - Temporal Ontology"@en ;
 	owl:versionIRI	<http://purl.org/tempo/0.1/> ;
 	owl:versionInfo	"0.1"^^xsd:string ;
