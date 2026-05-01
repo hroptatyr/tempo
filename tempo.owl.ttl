@@ -69,12 +69,13 @@ The goal of TempO is to allow for temporal constraints with control over how muc
 	dct:issued	"2022-05-26T05:00:00Z"^^xsd:dateTime ;
 	dct:language	"en"^^xsd:language ;
 	dct:license	<https://creativecommons.org/licenses/by-sa/4.0/> ;
-	dct:modified	"2022-08-20T05:19:00Z"^^xsd:dateTime ;
+	dct:modified	"2026-05-01T05:19:00Z"^^xsd:dateTime ;
 	dct:publisher	<https://orcid.org/0000-0002-7352-2825> ;
 	dct:title	"TempO - Temporal Ontology"@en ;
-	owl:versionIRI	<http://purl.org/tempo/0.1/> ;
-	owl:versionInfo	"0.1"^^xsd:string ;
+	owl:versionIRI	<http://purl.org/tempo/0.2/> ;
+	owl:versionInfo	"0.2"^^xsd:string ;
 	rdfs:seeAlso	<https://github.com/hroptatyr/tempo> ;
+	skos:changeNote	"In version 0.2 the properties tempo:validFrom, tempo:validTill, tempo:efficaciousFrom, and tempo:efficaciousTill are changed to DatatypeProperties."@en ;
 	vann:preferredNamespacePrefix	"tempo"^^xsd:string ;
 	vann:preferredNamespaceUri	"http://purl.org/tempo/" .
 
@@ -114,7 +115,7 @@ tempo:constrainedBy
 	rdfs:seeAlso	tempo:TemporalConstraint .
 
 tempo:efficaciousFrom
-	a	owl:AnnotationProperty ;
+	a	owl:DatatypeProperty ;
 	rdfs:comment	"""The date or time when this resource becomes efficacious.
 
 If omitted the resource is said to be efficacious in the past from a tempo:efficaciousTill's point of view.
@@ -156,7 +157,7 @@ the use of ex:XY's label on 2004-08-01 is anachronistic (use before its validate
 	rdfs:seeAlso	tempo:efficaciousTill , tempo:validFrom .
 
 tempo:efficaciousTill
-	a	owl:AnnotationProperty ;
+	a	owl:DatatypeProperty ;
 	rdfs:comment	"""The date or time when this resource becomes inefficacious.
 
 If omitted the resource is said to be efficacious in the future from a tempo:efficaciousFrom's point of view.
@@ -186,7 +187,7 @@ A point in time in tempo:efficaciousTill is always exclusive.  See tempo:validTi
 	rdfs:seeAlso	tempo:efficaciousFrom , tempo:validTill .
 
 tempo:validFrom
-	a	owl:AnnotationProperty ;
+	a	owl:DatatypeProperty ;
 	rdfs:comment	"""The date or time when this resource becomes valid.
 
 If omitted the resource is said to be valid in the past from a tempo:validTill's point of view.
@@ -257,7 +258,7 @@ is discouraged.
 	rdfs:seeAlso	tempo:validTill .
 
 tempo:validTill
-	a	owl:AnnotationProperty ;
+	a	owl:DatatypeProperty ;
 	rdfs:comment	"""The date or time when this resource becomes invalid.
 
 If omitted the resource is said to be valid in the future from a tempo:validFrom's point of view.
